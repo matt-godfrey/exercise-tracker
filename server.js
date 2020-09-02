@@ -7,7 +7,7 @@ const cors = require('cors')
 
 const mongoose = require('mongoose')
 var uri = 'mongodb+srv://matt-godfrey:' + process.env.PASS + '@cluster0.4ruse.mongodb.net/Test?retryWrites=true&w=majority'
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(uri || 'mongodb://localhost/stormy-temple-90369', { useNewUrlParser: true, useUnifiedTopology: true });
 
 var User = require('./userModel')
 const { response } = require('express')
