@@ -131,40 +131,40 @@ app.post("/api/exercise/new-user", (req, res) => {
         console.log(updatedUser)
         
         res.json(updatedUserObject)
+      
+      } else {
+        res.json( {message: "User ID not found in database. Please create a valid username and try again"})
       }
-      // } else {
-      //   res.json( {message: "User ID not found in database. Please create a valid username and try again"})
-      // }
       
       })
         
        })
 
-      //  app.get('/api/exercise/log/:userId?', (req, res) => {
+       app.get('/api/exercise/log/:userId?', (req, res) => {
           
-      //     User.findById(req.params.userId, (err, user) => {
-      //       if (err) return err;
-      //       if (!err && user != null) {
-      //         console.log('user found')
+          User.findById(req.params.userId, (err, user) => {
+            if (err) return err;
+            if (!err && user != null) {
+              console.log('user found')
             
-      //       let totalMins = user.session_Logs.reduce((acc, val) => {
-      //         return acc.duration + val.duration;
-      //       })
-      //       console.log(totalMins)
-      //       User.findByIdAndUpdate(req.params.userId, { count: totalMins }, { new: true }, (err, updatedUser) => {
-      //         if (err) return err
-      //         if (!err && updatedUser != null) {
-      //           console.log("user updated, count added")
-      //           res.json(updatedUser)
-      //         }
-      //       })
-      //     }
-      //       // } else {
-      //       //   res.json({messge: "User ID not found"})
-      //       // }
+            let totalMins = user.session_Logs.reduce((acc, val) => {
+              return acc.duration + val.duration;
+            })
+            console.log(totalMins)
+            User.findByIdAndUpdate(req.params.userId, { count: totalMins }, { new: true }, (err, updatedUser) => {
+              if (err) return err
+              if (!err && updatedUser != null) {
+                console.log("user updated, count added")
+                res.json(updatedUser)
+              }
+            })
+          }
+            // } else {
+            //   res.json({messge: "User ID not found"})
+            // }
             
-      //     })
-      //  })
+          })
+       })
 
 
 
