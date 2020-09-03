@@ -37,7 +37,7 @@ function checkDate(string) {
   var regex = /^\d{4}-\d{2}-\d{2}$/;
   if (!string.match(regex)) return false
 }
-// console.log(checkDate("hello"))
+
 
 app.post("/api/exercise/new-user", (req, res) => {
   
@@ -80,36 +80,20 @@ app.post("/api/exercise/new-user", (req, res) => {
 
   app.post('/api/exercise/add',  (req, res) => {
     console.log(req.body)
-    // let newSession = new Session({
-    //   // _id: id,
-    //   description: req.body.description,
-    //   duration: parseInt(req.body.duration),
-    //   // date: req.body.date
-    //   date: req.body.date
-    // })
-
     
-
-    // if (newSession.date === "" || new Date(newSession.date) == "Invalid Date") {
-    //   // newSession.date = new Date().toISOString().substring(0, 10)
-    //   newSession.date = new Date().toDateString()
-    // }
-    let { userId, description, duration, date } = req.body;
+    let { userId, username, description, duration, date } = req.body;
     console.log(date)
     let dateObject = date === "" || checkDate(date) === false ? new Date().toDateString() : new Date(date).toDateString()
       
     console.log(dateObject)
 
-    let newSession = {
-      _id: userId,
+    let newSession = new Session({
+      
       description: description,
       duration: +duration,
-      date: dateObject,
-      username: User.findById(userId, (err, user) => {
-        if (err) return err
-        return user.username;
-      })
-    }
+      date: dateObject
+    
+    })
 
     
     
@@ -125,14 +109,8 @@ app.post("/api/exercise/new-user", (req, res) => {
         updatedUserObject.date = new Date(newSession.date).toDateString();
         updatedUserObject.duration = newSession.duration;
         updatedUserObject.description = newSession.description;
-        
-        
-        
-        
-        // updatedUserObject.log = updatedUser.log;
-        
-        
-        console.log(updatedUser)
+      
+       console.log(updatedUser)
         
         res.json(updatedUserObject)
       
@@ -152,8 +130,8 @@ app.post("/api/exercise/new-user", (req, res) => {
             if (!err) {
               console.log('user found')
               let userResObj = user.toObject();
-              let userLog = userResObj.log;
-                userResObj.count = user.log.length;
+              userResObj.log.forEach(log => delete log._id)
+                
               if (req.query.limit) {
                 userResObj.log = user.log.slice(0, req.query.limit)
               }
