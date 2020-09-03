@@ -143,19 +143,21 @@ app.post("/api/exercise/new-user", (req, res) => {
        app.get('/api/exercise/log/:userId?', (req, res) => {
           
           User.findById(req.params.userId, (err, user) => {
+            console.log(user.log[0].duration)
             if (err) return err;
             if (!err && user != null) {
               console.log('user found')
-            
-            let totalMins = user.log.reduce((acc, val) => {
-              return acc.duration + val.duration;
-            })
-            console.log("Total mins = " + totalMins)
+            let userLog = user.log;
+            let total = userLog.reduce((total, count) => {
+             return total + count.duration;
+              
+            }, userLog[0].duration)
+            console.log("Total mins = " + total)
             let userObj = {};
-            userObj._id = req.params.id;
+            userObj._id = user.id;
             userObj.username = user.username;
             userObj.log = user.log;
-            userObj.totalMins = totalMins;
+            userObj.totalMins = total;
             userObj.count = user.log.length;
             res.json(userObj)
             }
