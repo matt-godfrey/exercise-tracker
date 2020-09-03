@@ -147,22 +147,17 @@ app.post("/api/exercise/new-user", (req, res) => {
             if (!err && user != null) {
               console.log('user found')
             
-            let totalMins = user.session_Logs.reduce((acc, val) => {
+            let totalMins = user.log.reduce((acc, val) => {
               return acc.duration + val.duration;
             })
-            console.log(totalMins)
-            User.findByIdAndUpdate(req.params.userId, { count: totalMins }, { new: true }, (err, updatedUser) => {
-              if (err) return err
-              if (!err && updatedUser != null) {
-                console.log("user updated, count added")
-                res.json(updatedUser)
-              }
-            })
-          }
-            // } else {
-            //   res.json({messge: "User ID not found"})
-            // }
-            
+            console.log("Total mins = " + totalMins)
+            let userObj = {};
+            userObj._id = req.params.id;
+            userObj.username = user.username;
+            userObj.log = user.log;
+            userObj.count = totalMins;
+            res.json(userObj)
+            }
           })
        })
 
