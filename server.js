@@ -155,7 +155,8 @@ app.post("/api/exercise/new-user", (req, res) => {
             userObj._id = req.params.id;
             userObj.username = user.username;
             userObj.log = user.log;
-            userObj.count = totalMins;
+            userObj.totalMins = totalMins;
+            userObj.count = user.log.length;
             res.json(userObj)
             }
           })
