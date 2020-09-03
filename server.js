@@ -33,8 +33,11 @@ app.get('/', (req, res) => {
 //   console.log(doc)
 // })
 
-
-
+function checkDate(string) {
+  var regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!string.match(regex)) return false
+}
+// console.log(checkDate("hello"))
 
 app.post("/api/exercise/new-user", (req, res) => {
   
@@ -85,22 +88,23 @@ app.post("/api/exercise/new-user", (req, res) => {
     //   date: req.body.date
     // })
 
-    let dateChecker = /[0-9]/g
+    
 
     // if (newSession.date === "" || new Date(newSession.date) == "Invalid Date") {
     //   // newSession.date = new Date().toISOString().substring(0, 10)
     //   newSession.date = new Date().toDateString()
     // }
     let { userId, description, duration, date } = req.body;
-    let dateObject = date === "" || date === "Invalid Date" ? new Date() : new Date(date)
-
-    
+    console.log(date)
+    let dateObject = date === "" || checkDate(date) === false ? new Date().toDateString() : new Date(date).toDateString()
+      
+    console.log(dateObject)
 
     let newSession = {
       _id: userId,
       description: description,
       duration: +duration,
-      date: dateObject.toDateString(),
+      date: dateObject,
       username: User.findById(userId, (err, user) => {
         if (err) return err
         return user.username;
@@ -143,7 +147,7 @@ app.post("/api/exercise/new-user", (req, res) => {
        app.get('/api/exercise/log/:userId?', (req, res) => {
           
           User.findById(req.params.userId, (err, user) => {
-            console.log(user.log[0].duration)
+            // console.log(user.log[0].duration)
             if (err) return err;
             if (!err && user != null) {
               console.log('user found')
