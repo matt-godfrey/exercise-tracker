@@ -145,15 +145,15 @@ app.post("/api/exercise/new-user", (req, res) => {
                 let endDate = req.query.to;
                 userResObj.log = user.log.filter(log => new Date(log.date) <= new Date(endDate))
               }
-            let total = userResObj.log.reduce((total, count) => {
-             return total + count.duration;
+            // let total = userResObj.log.reduce((total, count) => {
+            //  return total + count.duration;
               
-            }, user.log[0].duration)
+            // }, user.log[0].duration)
             console.log("Total mins = " + total)
             
             userResObj._id = user.id;
             userResObj.username = user.username;
-            userResObj.totalMins = total;
+            // userResObj.totalMins = total;
             userResObj.count = userResObj.log.length;
             // userResObj.log = userResObj.log;
             console.log(userResObj.log.length)
