@@ -144,25 +144,40 @@ app.post("/api/exercise/new-user", (req, res) => {
         
        })
 
-       app.get('/api/exercise/log/:userId?', (req, res) => {
+       app.get('/api/exercise/log', (req, res) => {
           
-          User.findById(req.params.userId, (err, user) => {
+          User.findById(req.query.userId, (err, user) => {
             // console.log(user.log[0].duration)
             if (err) return err;
             if (!err && user != null) {
               console.log('user found')
-            let userLog = user.log;
+              let userObj = user;
+              let userLog = userObj.log;
+
+              if (req.query.limit) {
+                userLog = userLog.slice(0, req.query.limit)
+              }
+
+              if (req.query.from) {
+                let startDate = req.query.from;
+               userLog = userLog.filter(log => new Date(log.date) >= new Date(startDate))
+              }
+            
+              if (req.query.to) {
+                let endDate = req.query.to;
+                userLog = userLog.filter(log => new Date(log.date) <= new Date(endDate))
+              }
             let total = userLog.reduce((total, count) => {
              return total + count.duration;
               
             }, userLog[0].duration)
             console.log("Total mins = " + total)
-            let userObj = {};
+            
             userObj._id = user.id;
             userObj.username = user.username;
-            userObj.log = user.log;
             userObj.totalMins = total;
-            userObj.count = user.log.length;
+            userObj.count = userLog.length;
+            userObj.log = userLog;
             res.json(userObj)
             }
           })
