@@ -136,7 +136,7 @@ app.post("/api/exercise/new-user", (req, res) => {
               // userResObj.log.forEach(log => delete log._id)
 
               if (req.query.limit) {
-                userResObj.log = userResObj.log.slice(0, req.query.limit + 1)
+                userResObj.log = userResObj.log.slice(0, req.query.limit)
                 console.log(req.query.limit)
               }
               
