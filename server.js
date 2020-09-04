@@ -163,19 +163,7 @@ app.post("/api/exercise/new-user", (req, res) => {
                   })
               }
                 
-              // if (req.query.limit) {
-              //   userResObj.log = user.log.slice(0, req.query.limit)
-              // }
-
-              // if (req.query.from) {
-              //   let startDate = req.query.from;
-              //  userResObj.log = user.log.filter(log => new Date(log.date) >= new Date(startDate))
-              // }
-            
-              // if (req.query.to) {
-              //   let endDate = req.query.to;
-              //   userResObj.log = user.log.filter(log => new Date(log.date) <= new Date(endDate))
-              // }
+              
             let total = userResObj.log.reduce((total, count) => {
              return total + count.duration;
               

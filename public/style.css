@@ -8,11 +8,24 @@ body {
   margin: 25px;
   color: #222;
   background-color: #f5f5f5;
+  font-family: 'Spectral', serif;
+  background-color: rgba(189, 185, 185, 0.849);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 h1 {
   font-weight: bold;
   
+}
+
+h3 {
+  color: white;
 }
 
 .bold {
@@ -26,7 +39,8 @@ p {
 form {
   margin-bottom: 25px;
   padding: 15px;
-  background-color: #87D37C;
+  background-color: #13017e;
+  box-shadow: 2px 3px 3px;
   display: inline-block;
   width: 100%;
   max-width: 340px;
