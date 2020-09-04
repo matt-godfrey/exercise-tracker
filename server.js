@@ -35,6 +35,9 @@ app.get('/', (req, res) => {
 
 function checkDate(string) {
   var regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!string) {
+    string = new Date().toDateString()
+  }
   if (!string.match(regex)) return false
 }
 
@@ -133,8 +136,10 @@ app.post("/api/exercise/new-user", (req, res) => {
               // userResObj.log.forEach(log => delete log._id)
 
               if (req.query.limit) {
-                userResObj.log = userResObj.log.slice(0, req.query.limit)
+                userResObj.log = userResObj.log.slice(0, req.query.limit + 1)
+                console.log(req.query.limit)
               }
+              
 
               if (req.query.from || req.query.to) {
                 let startDate = new Date(0)
@@ -176,12 +181,13 @@ app.post("/api/exercise/new-user", (req, res) => {
               
             }, user.log[0].duration)
             console.log("Total mins = " + total)
-            userResObj = userResObj.toObject()
-            // userResObj._id = user.id;
-            // userResObj.username = user.username;
-            userResObj.totalMins = total;
+            userResObj = userResObj.toJSON()
+            userResObj._id = user.id;
+            userResObj.username = user.username;
             userResObj.count = userResObj.log.length;
-            // userResObj.log = userResObj.log;
+            userResObj.totalMins = total;
+           
+            userResObj.log = userResObj.log;
             console.log(userResObj.log.length)
             res.json(userResObj)
             } 
