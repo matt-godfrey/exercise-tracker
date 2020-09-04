@@ -127,37 +127,66 @@ app.post("/api/exercise/new-user", (req, res) => {
           User.findById(req.query.userId, (err, user) => {
             console.log(user)
             if (err) return err;
-            if (!err) {
+            if (!err && user !== null) {
               console.log('user found')
-              let userResObj = user.toObject();
-              userResObj.log.forEach(log => delete log._id)
-                
+             let userResObj = user;
+              // userResObj.log.forEach(log => delete log._id)
+
               if (req.query.limit) {
-                userResObj.log = user.log.slice(0, req.query.limit)
+                userResObj.log = userResObj.log.slice(0, req.query.limit)
               }
 
-              if (req.query.from) {
-                let startDate = req.query.from;
-               userResObj.log = user.log.filter(log => new Date(log.date) >= new Date(startDate))
-              }
-            
-              if (req.query.to) {
-                let endDate = req.query.to;
-                userResObj.log = user.log.filter(log => new Date(log.date) <= new Date(endDate))
-              }
-            // let total = userResObj.log.reduce((total, count) => {
-            //  return total + count.duration;
+              if (req.query.from || req.query.to) {
+                let startDate = new Date(0)
+                let endDate = new Date();
+  
+                if (req.query.from) {
+                   startDate = new Date(req.query.from)
+                 userResObj.log = user.log.filter(log => new Date(log.date) >= new Date(startDate))
+                }
               
-            // }, user.log[0].duration)
-            console.log("Total mins = " + total)
+                if (req.query.to) {
+                   endDate = new Date(req.query.to);
+                  }
+
+                  startDate.getTime();
+                  endDate.getTime();
+
+                  userResObj.log = userResObj.log.filter(log => {
+                    let logDate = new Date(log.date)
+                    return logDate >= startDate && logDate <= endDate
+                  })
+              }
+                
+              // if (req.query.limit) {
+              //   userResObj.log = user.log.slice(0, req.query.limit)
+              // }
+
+              // if (req.query.from) {
+              //   let startDate = req.query.from;
+              //  userResObj.log = user.log.filter(log => new Date(log.date) >= new Date(startDate))
+              // }
             
-            userResObj._id = user.id;
-            userResObj.username = user.username;
-            // userResObj.totalMins = total;
+              // if (req.query.to) {
+              //   let endDate = req.query.to;
+              //   userResObj.log = user.log.filter(log => new Date(log.date) <= new Date(endDate))
+              // }
+            let total = userResObj.log.reduce((total, count) => {
+             return total + count.duration;
+              
+            }, user.log[0].duration)
+            console.log("Total mins = " + total)
+            userResObj = userResObj.toObject()
+            // userResObj._id = user.id;
+            // userResObj.username = user.username;
+            userResObj.totalMins = total;
             userResObj.count = userResObj.log.length;
             // userResObj.log = userResObj.log;
             console.log(userResObj.log.length)
             res.json(userResObj)
+            } 
+            if (!err && user === null) {
+              res.send("Please choose a valid user ID")
             }
           })
        })
